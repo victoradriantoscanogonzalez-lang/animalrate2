@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Catálogo - ANIMAL RATE</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="assets/icons/themify-icons/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+
+  </head>
+
+  <body class="catalog-page">
+
+    <header class="site_header">
+      <div class="container-fluid px-0">
+        <div class="row no-gutters">
+          <div class="col-12">
+            <div class="slim_topbar">
+              <h6>Envío nacional gratuito en Canadá en pedidos superiores a $500</h6>
+            </div>
+            <nav class="navbar navbar-expand-lg fixed-top pb-0 navbar_top">
+
+              <!-- Icons -->
+              <a class="navbar-brand" href="https://maps.app.goo.gl/2avXfTrgg27dXn3FA" aria-label="Abrir ubicación en Google Maps">
+                <img src="assets/images/gmap.png" alt="Abrir ubicación en Google Maps">
+              </a>
+              <a class="navbar-social-link" href="https://www.facebook.com/profile.php?id=100086889851905&amp;rdid=9KyQW0eRzlBmk9Gf&amp;share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1Hdf544bgE%2F#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+                <i class="ti-facebook" aria-hidden="true"></i>
+              </a>
+
+              <img src="assets/images/animal-rate-logo.png" alt="Logotipo de ANIMAL RATE" class="ml-auto mr-auto site_logo" style="height: 55px;">
+
+              <!-- Mobile button -->
+              <button class="cart-trigger" type="button" aria-label="Abrir carrito" aria-controls="shopping-cart-panel" aria-expanded="false">
+                <i class="ti-shopping-cart" aria-hidden="true"></i>
+              </button>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navToggler" aria-controls="navToggler" aria-expanded="false" aria-label="Abrir o cerrar el menú">
+                <spna class="ti-menu"></spna>
+              </button>
+
+              <!-- Main navs -->
+              <div class="collapse navbar-collapse" id="navToggler" style="flex-grow: 0;">
+                <ul class="navbar-nav ml-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="index.html">Inicio</a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" href="products.html">Catálogo</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contacto</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="rifas.html">Rifas</a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="container-fluid px-0">
+        <div class="row no-gutters">
+          <div class="col-12 site_banner_inner_products">
+            <div class="banner_heading_inner">
+              <h3 class="text-center">Catálogo</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="products" id="catalogo">
+      <div class="container">
+        <div class="category-filter-section">
+          <h2 class="category-filter-title">Explora por categoría</h2>
+          <div class="category-filter" role="group" aria-label="Filtrar catálogo por categoría">
+            <button class="category-filter-button is-active" type="button" data-category="todo" aria-pressed="true">
+              <img class="category-filter-image" src="assets/images/CategoríasImagenes/Todo.png" alt="" loading="lazy">
+              <span class="category-filter-label">Todo</span>
+            </button>
+            <button class="category-filter-button" type="button" data-category="terrarios" aria-pressed="false">
+              <img class="category-filter-image" src="assets/images/CategoríasImagenes/Terrarios.png" alt="" loading="lazy">
+              <span class="category-filter-label">Terrarios</span>
+            </button>
+            <button class="category-filter-button" type="button" data-category="camaleones" aria-pressed="false">
+              <img class="category-filter-image" src="assets/images/CategoríasImagenes/Camaleon.jpeg" alt="" loading="lazy">
+              <span class="category-filter-label">Camaleones</span>
+            </button>
+            <button class="category-filter-button" type="button" data-category="serpientes" aria-pressed="false">
+              <img class="category-filter-image" src="assets/images/CategoríasImagenes/Piton.png" alt="" loading="lazy">
+              <span class="category-filter-label">Serpientes</span>
+            </button>
+            <button class="category-filter-button" type="button" data-category="geckos" aria-pressed="false">
+              <img class="category-filter-image" src="assets/images/CategoríasImagenes/Gecko.png" alt="" loading="lazy">
+              <span class="category-filter-label">Geckos</span>
+            </button>
+            <button class="category-filter-button" type="button" data-category="ranas" aria-pressed="false">
+              <img class="category-filter-image" src="assets/images/CategoríasImagenes/Rana.png" alt="" loading="lazy">
+              <span class="category-filter-label">Ranas</span>
+            </button>
+          </div>
+        </div>
+        <div class="products_empty-state" id="products-empty-state" role="status" aria-live="polite">
+          <h3 class="products_empty-title">Próximamente</h3>
+          <p class="products_empty-message">Estamos preparando nuestro Catálogo. Pronto encontrarás aquí todo nuestro Catálogo.</p>
+        </div>
+        <div id="products-grid" class="row"></div>
+      </div>
+    </section>
+
+    <footer class="site_footer pt-5 pb-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <ul class="list_group footer_list">
+              <li class="list_group_item">
+                <a href="index.html" class="footer_logo">
+                  <img class="" src="assets/images/animal-rate-logo.png" alt="Logotipo de ANIMAL RATE">
+                </a>
+              </li>
+              <li class="list_group_item">
+                <p class="py-3 footer-description">ANIMAL RATE cuenta con muchos ejemplares de la mejor calidad, así como un servicio excepcional para satisfacer las necesidades de nuestros clientes.</p>
+              </li>
+              <li class="list_group_item">
+                <p class="pb-0 mb-0 h6">
+                  <i class="ti-headphone mr-1"></i>
+                  +52 1 56 4841 8580
+                </p>
+              </li>
+              <li class="list_group_item h6">
+                <p class="">
+                  <i class="ti-email mr-1"></i>
+                  animalrate8@gmail.com
+                </p>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-3 footer-menu-column">
+            <h6 class="footer_title">Menú</h6>
+            <ul class="list_group footer_list footer-menu-links">
+              <li class="list_group_item">
+                <a href="index.html">Inicio</a>
+              </li>
+              <li class="list_group_item">
+                <a href="products.html">Catálogo</a>
+              </li>
+              <li class="list_group_item">
+                <a href="rifas.html">Rifas</a>
+              </li>
+              <li class="list_group_item">
+                <a href="contact.html">Contacto</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div class="copyright">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <p>© ANIMAL RATE 2026</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/vendor/jquery.min.js" charset="utf-8"></script>
+    <script src="assets/js/vendor/bootstrap.bundle.min.js" charset="utf-8"></script>
+    <script src="assets/js/vendor/TweenMax.min.js" charset="utf-8"></script>
+    <script src="assets/js/main.js" charset="utf-8"></script>
+    <script src="assets/js/products.js" charset="utf-8"></script>
+    <script src="assets/js/cart.js" charset="utf-8"></script>
+
+  </body>
+</html>

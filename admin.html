@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>Panel de Administración - ANIMAL RATE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <style>
+        :root {
+            --bg: #060e18;
+            --surface: rgba(12, 28, 45, 0.72);
+            --surface-solid: #0d1f33;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(32, 232, 144, 0.22);
+            --accent: #20e890;
+            --accent-dim: rgba(32, 232, 144, 0.10);
+            --danger: #ff4d6a;
+            --danger-dim: rgba(255, 77, 106, 0.10);
+            --text: #e2e8f0;
+            --muted: #5a7089;
+            --input: rgba(6, 14, 24, 0.65);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { box-sizing: border-box; margin: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding-top: 72px;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Navbar ───────────────────────────── */
+        .top-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(6, 14, 24, 0.92);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+        }
+        .top-bar .logo { height: 38px; opacity: .9; }
+        .top-bar .actions { display: flex; align-items: center; gap: 16px; }
+        .top-bar .actions a {
+            color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500;
+            transition: color .2s;
+        }
+        .top-bar .actions a:hover { color: var(--text); }
+
+        .btn-ghost-danger {
+            background: none; border: 1px solid rgba(255,77,106,0.2); color: var(--danger);
+            border-radius: 6px; padding: 5px 14px; font-size: 12px; font-weight: 600;
+            font-family: inherit; cursor: pointer; transition: all .2s;
+        }
+        .btn-ghost-danger:hover { background: var(--danger-dim); }
+
+        /* ── Container ────────────────────────── */
+        .shell { max-width: 1260px; margin: 0 auto; padding: 28px 24px 80px; }
+
+        /* ── Card ─────────────────────────────── */
+        .card-g {
+            background: var(--surface);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+            transition: border-color .3s ease;
+        }
+        .card-g:hover { border-color: var(--border-hover); }
+
+        .card-title-row {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 24px; padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-title-row .dot {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        }
+        .dot-green { background: var(--accent); }
+        .dot-blue  { background: #3884ff; }
+        .dot-amber { background: #f59e0b; }
+        .card-title-row h4 {
+            font-size: 14px; font-weight: 600; letter-spacing: .01em; color: var(--text);
+        }
+
+        /* ── Login ────────────────────────────── */
+        .login-wrap {
+            display: flex; align-items: center; justify-content: center;
+            min-height: calc(100vh - 140px);
+        }
+        .login-box { width: 100%; max-width: 380px; text-align: center; }
+        .login-box h3 { font-size: 20px; font-weight: 700; margin-bottom: 4px; letter-spacing: -.02em; }
+        .login-box .sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+        /* ── Form ─────────────────────────────── */
+        .form-control, .form-select {
+            background: var(--input) !important;
+            color: var(--text) !important;
+            border: 1px solid rgba(255,255,255,0.07) !important;
+            border-radius: var(--radius-sm) !important;
+            padding: 10px 14px !important;
+            font-size: 13px !important;
+            font-family: 'Inter', sans-serif !important;
+            transition: border-color .2s, box-shadow .2s !important;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 0 3px var(--accent-dim) !important;
+            outline: none !important;
+        }
+        .form-control::placeholder { color: var(--muted) !important; }
+
+        .label {
+            display: block; font-size: 11px; font-weight: 600; color: var(--muted);
+            text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px;
+        }
+
+        input[type="file"].form-control { padding: 7px 14px !important; }
+        input[type="file"].form-control::file-selector-button {
+            background: var(--accent-dim); color: var(--accent);
+            border: 1px solid rgba(32,232,144,0.18); border-radius: 5px;
+            padding: 3px 10px; margin-right: 10px;
+            font-size: 11px; font-weight: 600; font-family: inherit;
+            cursor: pointer; transition: background .2s;
+        }
+        input[type="file"].form-control::file-selector-button:hover {
+            background: rgba(32,232,144,0.2);
+        }
+
+        /* ── Buttons ──────────────────────────── */
+        .btn-primary-g {
+            background: var(--accent); color: #000;
+            border: none; border-radius: var(--radius-sm);
+            padding: 10px 20px; font-size: 13px; font-weight: 600;
+            font-family: 'Inter', sans-serif; cursor: pointer;
+            transition: all .2s; width: 100%;
+        }
+        .btn-primary-g:hover {
+            background: #1cd47f;
+            box-shadow: 0 4px 18px rgba(32,232,144,0.25);
+            transform: translateY(-1px);
+        }
+        .btn-primary-g:active { transform: translateY(0); }
+
+        .btn-delete {
+            background: none; color: var(--muted); border: 1px solid var(--border);
+            border-radius: 6px; padding: 5px 12px; font-size: 11px; font-weight: 600;
+            font-family: inherit; cursor: pointer; transition: all .2s;
+        }
+        .btn-delete:hover {
+            color: var(--danger); border-color: rgba(255,77,106,0.3); background: var(--danger-dim);
+        }
+
+        /* ── Tabs ─────────────────────────────── */
+        .tabs-bar {
+            display: flex; gap: 2px;
+            background: var(--surface-solid);
+            border-radius: 10px; padding: 3px;
+            margin-bottom: 28px; border: 1px solid var(--border);
+        }
+        .tabs-bar .tab {
+            flex: 1; padding: 9px 0; text-align: center;
+            background: none; border: none; border-radius: 8px;
+            color: var(--muted); font-size: 13px; font-weight: 600;
+            font-family: 'Inter', sans-serif; cursor: pointer;
+            transition: all .2s;
+        }
+        .tabs-bar .tab.on {
+            background: var(--accent); color: #000;
+            box-shadow: 0 1px 8px rgba(32,232,144,0.2);
+        }
+        .tabs-bar .tab:not(.on):hover { color: var(--text); background: rgba(255,255,255,0.03); }
+
+        /* ── Table ────────────────────────────── */
+        .tbl { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .tbl thead th {
+            font-size: 10px; font-weight: 700; color: var(--muted);
+            text-transform: uppercase; letter-spacing: .07em;
+            padding: 8px 14px; border-bottom: 1px solid var(--border); text-align: left;
+        }
+        .tbl tbody tr { transition: background .12s; }
+        .tbl tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .tbl tbody td {
+            padding: 12px 14px; font-size: 13px;
+            border-bottom: 1px solid rgba(255,255,255,0.025); vertical-align: middle;
+        }
+        .thumb {
+            width: 40px; height: 40px; border-radius: var(--radius-sm);
+            object-fit: cover; border: 1px solid var(--border);
+        }
+        .no-thumb {
+            width: 40px; height: 40px; border-radius: var(--radius-sm);
+            background: var(--input); border: 1px dashed rgba(255,255,255,0.08);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 9px; color: var(--muted); font-weight: 600;
+        }
+        .price { color: var(--accent); font-weight: 600; font-size: 13px; }
+        .badge-cat {
+            background: rgba(56,132,255,0.08); color: #5a9cff;
+            font-size: 11px; font-weight: 600; padding: 2px 9px;
+            border-radius: 20px;
+        }
+
+        /* ── Boletos ──────────────────────────── */
+        .boleto-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+            gap: 6px; margin-top: 14px;
+            max-height: 340px; overflow-y: auto; padding-right: 4px;
+        }
+        .boleto-grid::-webkit-scrollbar { width: 3px; }
+        .boleto-grid::-webkit-scrollbar-track { background: transparent; }
+        .boleto-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+
+        .boleto {
+            background: var(--input); border: 1px solid rgba(255,255,255,0.06);
+            text-align: center; padding: 9px 2px;
+            cursor: pointer; border-radius: 6px;
+            user-select: none; font-size: 12px; font-weight: 500;
+            transition: all .12s; color: var(--text);
+        }
+        .boleto:hover:not(.ocupado) { border-color: rgba(32,232,144,0.35); background: var(--accent-dim); }
+        .boleto.selected {
+            background: var(--accent) !important; color: #000; font-weight: 700;
+            border-color: var(--accent); box-shadow: 0 1px 8px rgba(32,232,144,0.25);
+        }
+        .boleto.ocupado {
+            background: var(--danger-dim); border-color: rgba(255,77,106,0.15);
+            color: var(--danger); cursor: not-allowed; opacity: .65;
+            text-decoration: line-through;
+        }
+
+        .legend { display: flex; gap: 18px; font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+        .legend-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 3px; margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        /* ── Feedback ─────────────────────────── */
+        .toast-msg {
+            display: none; padding: 10px 14px; border-radius: var(--radius-sm);
+            margin-bottom: 16px; font-size: 12px; font-weight: 500;
+            border: 1px solid transparent;
+        }
+        .toast-msg.ok  { background: var(--accent-dim); color: var(--accent); border-color: rgba(32,232,144,0.15); }
+        .toast-msg.err { background: var(--danger-dim); color: var(--danger); border-color: rgba(255,77,106,0.15); }
+
+        /* ── Empty ────────────────────────────── */
+        .empty { text-align: center; padding: 44px 20px; color: var(--muted); }
+        .empty p { font-size: 13px; margin: 0; }
+
+        /* ── Responsive ───────────────────────── */
+        @media (max-width: 768px) {
+            .shell { padding: 16px 12px 48px; }
+            .card-g { padding: 20px 16px; }
+            .tabs-bar .tab { font-size: 12px; padding: 8px 0; }
+            .top-bar { padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="top-bar">
+        <img src="assets/images/animal-rate-logo.png" alt="ANIMAL RATE" class="logo">
+        <div class="actions">
+            <a href="index.html">Volver al sitio</a>
+            <button id="btn-logout" class="btn-ghost-danger" style="display:none;">Cerrar sesión</button>
+        </div>
+    </nav>
+
+    <div class="shell">
+
+        <!-- Login -->
+        <div id="login-section" class="login-wrap">
+            <div class="card-g login-box">
+                <h3>Administración</h3>
+                <p class="sub">Ingresa tus credenciales para continuar</p>
+                <div id="login-feedback" class="toast-msg"></div>
+                <form id="form-login">
+                    <div class="mb-3">
+                        <input type="email" id="admin-user" class="form-control" placeholder="animalrate8@gmail.com" value="animalrate8@gmail.com">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" id="admin-password" class="form-control" placeholder="Contraseña" value="">
+                    </div>
+                    <button type="submit" class="btn-primary-g">Ingresar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard-section" style="display:none;">
+
+            <div class="tabs-bar">
+                <button class="tab on" data-tab="products">Productos</button>
+                <button class="tab" data-tab="rifas">Rifas</button>
+            </div>
+
+            <!-- Tab: Productos -->
+            <div id="tab-products" class="tab-panel">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card-g">
+                            <div class="card-title-row">
+                                <span class="dot dot-green"></span>
+                                <h4>Nuevo producto</h4>
+                            </div>
+                            <div id="prod-feedback" class="toast-msg"></div>
+                            <form id="form-product">
+                                <input type="hidden" id="prod-id" value="">
+                                <div class="mb-3"><label class="label">Nombre</label><input type="text" id="prod-nombre" name="nombre" class="form-control" placeholder="Gecko Leopardo" required></div>
+                                <div class="mb-3"><label class="label">Precio</label><input type="number" id="prod-precio" name="precio" class="form-control" placeholder="0.00" step="0.01" required></div>
+                                <div class="mb-3"><label class="label">Unidades disponibles</label><input type="number" id="prod-stock" name="stock" class="form-control" placeholder="1" min="1" value="1" required></div>
+                                <div class="mb-3">
+                                    <label class="label">Categoría</label>
+                                    <select id="prod-categoria" name="categoria" class="form-control" required>
+                                        <option value="Camaleones">Camaleones</option>
+                                        <option value="Serpientes">Serpientes</option>
+                                        <option value="Geckos">Geckos</option>
+                                        <option value="Terrarios">Terrarios</option>
+                                        <option value="Ranas">Ranas</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3"><label class="label">Descripción</label><textarea id="prod-descripcion" name="descripcion" class="form-control" placeholder="Descripción breve..." rows="3"></textarea></div>
+                                <div class="mb-3">
+                                    <label class="label">Imagen</label>
+                                    <input type="file" id="prod-imagen" name="imagen" class="form-control" accept="image/*">
+                                    <div id="crop-wrapper" style="display:none; margin-top:12px;">
+                                        <p style="font-size:11px; color:var(--accent); margin-bottom:8px; font-weight:600;">Ajusta la imagen arrastrando y usando el scroll para zoom:</p>
+                                        <div style="width:100%; max-height:280px; background:#000; border-radius:6px; overflow:hidden; border:1px solid var(--border);">
+                                            <img id="crop-image" style="max-width:100%; display:block;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:10px; margin-top:16px;">
+                                    <button type="submit" class="btn-primary-g" style="flex:1;">Guardar producto</button>
+                                    <button type="button" id="btn-cancelar-producto" class="btn-ghost-danger" style="flex:1;">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-g">
+                            <div class="card-title-row">
+                                <span class="dot dot-blue"></span>
+                                <h4>Inventario</h4>
+                            </div>
+                            <div style="overflow-x:auto;">
+                                <table class="tbl">
+                                    <thead><tr><th>Imagen</th><th>Nombre</th><th>Precio</th><th>Categoría</th><th>Stock</th><th style="text-align:right;">Acciones</th></tr></thead>
+                                    <tbody id="product-list"></tbody>
+                                </table>
+                            </div>
+                            <div id="products-empty" class="empty"><p>Sin productos registrados.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Rifas -->
+            <div id="tab-rifas" class="tab-panel" style="display:none;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card-g">
+                            <div class="card-title-row">
+                                <span class="dot dot-amber"></span>
+                                <h4>Nueva rifa</h4>
+                            </div>
+                            <div id="rifa-feedback" class="toast-msg"></div>
+                            <form id="form-rifa">
+                                <div class="mb-3"><label class="label">Nombre de la rifa</label><input type="text" id="rifa-nombre" name="nombre" class="form-control" placeholder="Ej. Rifa Python Ball" required></div>
+                                <div class="mb-3"><label class="label">Total de boletos</label><input type="number" id="rifa-total" name="total" class="form-control" placeholder="100" required></div>
+                                <div class="mb-3"><label class="label">Precio por boleto</label><input type="number" id="rifa-precio" name="precio" class="form-control" placeholder="0.00" step="0.01" required></div>
+                                <div class="mb-3"><label class="label">Imagen del premio</label><input type="file" id="rifa-imagen" name="imagen" class="form-control" accept="image/*" required></div>
+                                <button type="submit" class="btn-primary-g" style="margin-top:8px;">Lanzar rifa</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <!-- Lista de todas las rifas -->
+                        <div class="card-g" id="rifas-list-card">
+                            <div class="card-title-row">
+                                <span class="dot dot-blue"></span>
+                                <h4>Rifas activas</h4>
+                            </div>
+                            <div id="rifas-list-empty" class="empty"><p>No hay rifas activas. Crea la primera.</p></div>
+                            <div id="rifas-list-container"></div>
+                        </div>
+
+                        <!-- Panel de gestión de boletos (se muestra al seleccionar una rifa) -->
+                        <div class="card-g" id="boletos-panel" style="display:none;">
+                            <div class="card-title-row" style="justify-content:space-between;">
+                                <div style="display:flex;align-items:center;gap:12px;">
+                                    <span class="dot dot-green"></span>
+                                    <h4 id="boletos-panel-title">Boletos</h4>
+                                </div>
+                                <button id="btn-cerrar-panel" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;">&times;</button>
+                            </div>
+                            <div id="venta-feedback" class="toast-msg"></div>
+                            <div class="row mb-3" style="gap:8px 0;">
+                                <div class="col-md-4">
+                                    <input type="text" id="comprador-nombre" class="form-control" placeholder="Nombre...">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="comprador-telefono" class="form-control" placeholder="Telefono...">
+                                </div>
+                                <div class="col-md-4">
+                                    <button id="btn-marcar-ocupados" class="btn-primary-g" style="height:100%;">Registrar Venta</button>
+                                </div>
+                            </div>
+                            <div class="legend">
+                                <span><span class="legend-dot" style="background:var(--input);border:1px solid rgba(255,255,255,0.08);"></span>Disponible</span>
+                                <span><span class="legend-dot" style="background:var(--accent);"></span>Seleccionado</span>
+                                <span><span class="legend-dot" style="background:var(--danger-dim);border:1px solid rgba(255,77,106,0.2);"></span>Ocupado</span>
+                            </div>
+                            <div id="boletos-container" class="boleto-grid mb-4"></div>
+
+                            <!-- Compradores -->
+                            <div id="rifa-details-section" style="border-top: 1px solid var(--border); padding-top: 24px; margin-top: 8px;">
+                                <div class="card-title-row" style="margin-bottom: 16px;">
+                                    <span class="dot dot-blue"></span>
+                                    <h4>Compradores Registrados</h4>
+                                </div>
+                                <div style="max-height: 220px; overflow-y: auto; margin-bottom: 24px;">
+                                    <table class="tbl">
+                                        <thead><tr><th>N Boleto</th><th>Nombre</th><th>Telefono</th></tr></thead>
+                                        <tbody id="compradores-list"></tbody>
+                                    </table>
+                                </div>
+                                <!-- Confirmacion inline para terminar rifa -->
+                                <div id="confirm-terminar" style="display:none; background:var(--danger-dim); border:1px solid rgba(255,77,106,0.25); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:12px;">
+                                    <p style="color:var(--danger); font-size:13px; font-weight:600; margin-bottom:10px;">Esta accion es permanente. Se eliminaran todos los datos de la rifa.</p>
+                                    <div style="display:flex; gap:10px;">
+                                        <button id="btn-confirmar-eliminar" class="btn-ghost-danger" style="flex:1; padding:8px;">Confirmar eliminacion</button>
+                                        <button id="btn-cancelar-eliminar" style="flex:1; padding:8px; background:none; border:1px solid var(--border); color:var(--muted); border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; font-family:inherit;">Cancelar</button>
+                                    </div>
+                                </div>
+                                <button id="btn-terminar-rifa" class="btn-ghost-danger w-100" style="padding:10px; border-color:rgba(255,77,106,0.3);">Terminar y eliminar rifa</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="assets/js/vendor/jquery.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginSection = document.getElementById('login-section');
+            const dashboardSection = document.getElementById('dashboard-section');
+            const btnLogout = document.getElementById('btn-logout');
+
+            let rifaActivaId = null;
+            let boletosSeleccionados = [];
+
+            // Tabs
+            document.querySelectorAll('.tabs-bar .tab').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tabs-bar .tab').forEach(b => b.classList.remove('on'));
+                    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+                    btn.classList.add('on');
+                    document.getElementById('tab-' + btn.dataset.tab).style.display = 'block';
+                });
+            });
+
+            function showFeedback(id, msg, isError = false) {
+                const el = document.getElementById(id);
+                el.style.display = 'block';
+                el.innerText = msg;
+                el.className = 'toast-msg ' + (isError ? 'err' : 'ok');
+                setTimeout(() => el.style.display = 'none', 4000);
+            }
+
+            // Login — valida contra el servidor (api/login.php), no en el navegador
+            document.getElementById('form-login').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const emailVal = (document.getElementById('admin-user').value.trim() || 'animalrate8@gmail.com').toLowerCase();
+                const passwordVal = document.getElementById('admin-password').value.trim();
+
+                try {
+                    const res = await fetch('api/login.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: emailVal, password: passwordVal })
+                    });
+                    const result = await res.json();
+
+                    if (result.status === 'success') {
+                        loginSection.style.display = 'none';
+                        dashboardSection.style.display = 'block';
+                        btnLogout.style.display = 'block';
+                        cargarDatosServidor();
+                    } else {
+                        showFeedback('login-feedback', 'Correo o contraseña incorrectos', true);
+                    }
+                } catch (err) {
+                    showFeedback('login-feedback', 'No se pudo conectar con el servidor', true);
+                }
+            });
+
+            btnLogout.addEventListener('click', () => window.location.reload());
+
+            function cargarDatosServidor() {
+                cargarProductos();
+                cargarRifas();
+            }
+
+            // ─── Productos ───────────────────────
+            async function cargarProductos() {
+                try {
+                    const res = await fetch('api/productos.php');
+                    const json = await res.json();
+                    const tbody = document.getElementById('product-list');
+                    const empty = document.getElementById('products-empty');
+                    tbody.innerHTML = '';
+
+                    if (json.status === 'success' && json.data.length > 0) {
+                        empty.style.display = 'none';
+                        json.data.forEach(p => {
+                            const img = p.imagenes
+                                ? `<img src="${p.imagenes}" class="thumb">`
+                                : `<span class="no-thumb">—</span>`;
+                            const stock = parseInt(p.stock) || 0;
+                            const stockBadge = stock === 0
+                                ? `<span style="background:var(--danger-dim);color:var(--danger);font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;">Agotado</span>`
+                                : `<span style="background:var(--accent-dim);color:var(--accent);font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;">${stock} uds.</span>`;
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td>${img}</td>
+                                    <td style="font-weight:500;">${p.nombre}</td>
+                                    <td><span class="price">$${parseFloat(p.precio).toFixed(2)}</span></td>
+                                    <td><span class="badge-cat">${p.categoria}</span></td>
+                                    <td>${stockBadge}</td>
+                                    <td style="text-align:right;"><button class="btn-delete" onclick="eliminarProducto(${p.id})">Eliminar</button></td>
+                                </tr>`;
+                        });
+                    } else {
+                        empty.style.display = 'block';
+                    }
+                } catch (err) {
+                    console.error('Error al cargar productos', err);
+                }
+            }
+
+            let productCropper = null;
+
+            document.getElementById('prod-imagen').addEventListener('change', function(e) {
+                var file = e.target.files[0];
+                var cropWrapper = document.getElementById('crop-wrapper');
+                var img = document.getElementById('crop-image');
+                
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(evt) {
+                        cropWrapper.style.display = 'block';
+                        img.src = evt.target.result;
+                        
+                        if (productCropper) { productCropper.destroy(); }
+                        productCropper = new Cropper(img, {
+                            viewMode: 1,
+                            dragMode: 'move', // El usuario mueve la imagen, no la caja
+                            aspectRatio: 1, // Tamaño cuadrado estándar para catálogo (puedes ajustarlo si prefieres 4/3)
+                            autoCropArea: 1,
+                            cropBoxMovable: false,
+                            cropBoxResizable: false,
+                            background: false,
+                            guides: false,
+                            center: false,
+                            highlight: false
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    cropWrapper.style.display = 'none';
+                    if (productCropper) { productCropper.destroy(); productCropper = null; }
+                }
+            });
+
+            document.getElementById('btn-cancelar-producto').addEventListener('click', () => {
+                document.getElementById('form-product').reset();
+                document.getElementById('crop-wrapper').style.display = 'none';
+                if (productCropper) { productCropper.destroy(); productCropper = null; }
+            });
+
+            document.getElementById('form-product').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const form = document.getElementById('form-product');
+                let formData = new FormData(form);
+
+                if (productCropper) {
+                    // Convertir la imagen recortada en Blob
+                    const blob = await new Promise(resolve => {
+                        productCropper.getCroppedCanvas({
+                            maxWidth: 1000,
+                            maxHeight: 1000,
+                            fillColor: '#fff'
+                        }).toBlob(resolve, 'image/jpeg', 0.85);
+                    });
+                    formData.set('imagen', blob, 'recortada.jpg');
+                }
+
+                try {
+                    const res = await fetch('api/productos.php', { method: 'POST', body: formData });
+                    const r = await res.json();
+                    if (r.status === 'success') {
+                        showFeedback('prod-feedback', 'Producto guardado correctamente');
+                        form.reset();
+                        document.getElementById('crop-wrapper').style.display = 'none';
+                        if (productCropper) { productCropper.destroy(); productCropper = null; }
+                        cargarProductos();
+                    } else {
+                        showFeedback('prod-feedback', 'Error: ' + r.message, true);
+                    }
+                } catch (err) {
+                    showFeedback('prod-feedback', 'Error al guardar el producto', true);
+                }
+            });
+
+            window.eliminarProducto = async function(id) {
+                var row = event.target.closest('tr');
+                var existing = row.querySelector('.confirm-del-prod');
+                if (existing) { existing.remove(); return; }
+                var confirmDiv = document.createElement('td');
+                confirmDiv.colSpan = 6;
+                confirmDiv.className = 'confirm-del-prod';
+                confirmDiv.style.cssText = 'background:var(--danger-dim);padding:10px 14px;';
+                confirmDiv.innerHTML = `<span style="color:var(--danger);font-size:12px;font-weight:600;margin-right:12px;">Confirmar eliminacion</span>
+                    <button onclick="confirmarEliminarProducto(${id})" style="background:var(--danger);color:#fff;border:none;border-radius:5px;padding:4px 12px;font-size:11px;font-weight:700;cursor:pointer;margin-right:6px;">Eliminar</button>
+                    <button onclick="this.closest('.confirm-del-prod').remove()" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;">Cancelar</button>`;
+                var newRow = document.createElement('tr');
+                newRow.appendChild(confirmDiv);
+                row.insertAdjacentElement('afterend', newRow);
+            };
+
+            window.confirmarEliminarProducto = async function(id) {
+                try {
+                    const res = await fetch(`api/productos.php?id=${id}`, { method: 'DELETE' });
+                    const r = await res.json();
+                    if (r.status === 'success') cargarProductos();
+                    else showFeedback('prod-feedback', 'Error: ' + r.message, true);
+                } catch (e) { showFeedback('prod-feedback', 'Error al eliminar', true); }
+            };
+
+            // ─── Rifas ───────────────────────────
+            let todasLasRifas = [];
+
+            async function cargarRifas() {
+                try {
+                    const res  = await fetch('api/rifas.php');
+                    const json = await res.json();
+                    todasLasRifas = (json.status === 'success') ? json.data : [];
+                    renderListaRifas();
+                } catch (err) { console.error('Error al cargar rifas', err); }
+            }
+
+            function renderListaRifas() {
+                const listEmpty = document.getElementById('rifas-list-empty');
+                const listContainer = document.getElementById('rifas-list-container');
+                listContainer.innerHTML = '';
+
+                if (!todasLasRifas.length) {
+                    listEmpty.style.display = 'block';
+                    document.getElementById('boletos-panel').style.display = 'none';
+                    return;
+                }
+                listEmpty.style.display = 'none';
+
+                todasLasRifas.forEach(rifa => {
+                    const ocupados   = rifa.boletos.filter(b => b.estado === 'ocupado').length;
+                    const disponibles= rifa.boletos.length - ocupados;
+                    const row = document.createElement('div');
+                    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);gap:12px;';
+                    row.innerHTML = `
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;">${rifa.nombre}</div>
+                            <div style="font-size:11px;color:var(--muted);">
+                                <span style="color:var(--accent);font-weight:600;">${disponibles}</span> disponibles
+                                &nbsp;·&nbsp;
+                                <span style="color:var(--danger);font-weight:600;">${ocupados}</span> ocupados
+                                &nbsp;·&nbsp; $${parseFloat(rifa.precio).toFixed(2)} c/u
+                            </div>
+                        </div>
+                        <button onclick="abrirPanelRifa(${rifa.id})" style="background:var(--accent-dim);color:var(--accent);border:1px solid rgba(32,232,144,0.2);border-radius:6px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Gestionar</button>
+                    `;
+                    listContainer.appendChild(row);
+                });
+            }
+
+            window.abrirPanelRifa = function(id) {
+                const rifa = todasLasRifas.find(r => r.id == id);
+                if (!rifa) return;
+                rifaActivaId = rifa.id;
+                document.getElementById('boletos-panel').style.display = 'block';
+                document.getElementById('boletos-panel-title').textContent = 'Boletos — ' + rifa.nombre;
+                document.getElementById('confirm-terminar').style.display = 'none';
+                renderBoletos(rifa);
+                document.getElementById('boletos-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            };
+
+            function renderBoletos(rifa) {
+                const container  = document.getElementById('boletos-container');
+                const compList   = document.getElementById('compradores-list');
+                container.innerHTML = '';
+                compList.innerHTML  = '';
+                boletosSeleccionados = [];
+
+                let compradoresHTML = '';
+                rifa.boletos.forEach(b => {
+                    const div = document.createElement('div');
+                    div.className = `boleto ${b.estado === 'ocupado' ? 'ocupado' : ''}`;
+                    div.innerText = b.numero;
+                    div.title = b.comprador ? `${b.comprador} (${b.telefono || ''})` : 'Disponible';
+                    if (b.estado !== 'ocupado') {
+                        div.addEventListener('click', () => {
+                            div.classList.toggle('selected');
+                            const idx = boletosSeleccionados.indexOf(b.numero);
+                            if (idx > -1) boletosSeleccionados.splice(idx, 1);
+                            else boletosSeleccionados.push(b.numero);
+                        });
+                    } else {
+                        compradoresHTML += `<tr>
+                            <td><span style="font-weight:bold;color:var(--accent);">${b.numero}</span></td>
+                            <td>${b.comprador}</td>
+                            <td>${b.telefono || '-'}</td>
+                        </tr>`;
+                    }
+                    container.appendChild(div);
+                });
+                compList.innerHTML = compradoresHTML || '<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:16px 0;">Sin ventas registradas</td></tr>';
+            }
+
+            document.getElementById('btn-cerrar-panel').addEventListener('click', () => {
+                document.getElementById('boletos-panel').style.display = 'none';
+                rifaActivaId = null;
+            });
+
+            document.getElementById('form-rifa').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const form = document.getElementById('form-rifa');
+                try {
+                    const res = await fetch('api/rifas.php', { method: 'POST', body: new FormData(form) });
+                    const r   = await res.json();
+                    if (r.status === 'success') {
+                        showFeedback('rifa-feedback', 'Rifa lanzada correctamente');
+                        form.reset();
+                        await cargarRifas();
+                    } else {
+                        showFeedback('rifa-feedback', 'Error: ' + r.message, true);
+                    }
+                } catch (err) {
+                    showFeedback('rifa-feedback', 'Error al crear la rifa', true);
+                }
+            });
+
+            document.getElementById('btn-marcar-ocupados').addEventListener('click', async () => {
+                const comprador = document.getElementById('comprador-nombre').value.trim();
+                const telefono  = document.getElementById('comprador-telefono').value.trim();
+                if (!boletosSeleccionados.length) return showFeedback('venta-feedback', 'Selecciona al menos un boleto.', true);
+                if (!comprador) return showFeedback('venta-feedback', 'Ingresa el nombre del comprador.', true);
+                if (!telefono)  return showFeedback('venta-feedback', 'Ingresa el numero de telefono.', true);
+                if (!rifaActivaId) return;
+
+                for (let num of boletosSeleccionados) {
+                    await fetch('api/rifas.php', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: rifaActivaId, numero: num, comprador, telefono })
+                    });
+                }
+                document.getElementById('comprador-nombre').value  = '';
+                document.getElementById('comprador-telefono').value = '';
+                showFeedback('venta-feedback', 'Venta registrada correctamente');
+                await cargarRifas();
+                const rifa = todasLasRifas.find(r => r.id == rifaActivaId);
+                if (rifa) renderBoletos(rifa);
+            });
+
+            document.getElementById('btn-terminar-rifa').addEventListener('click', () => {
+                document.getElementById('confirm-terminar').style.display = 'block';
+            });
+
+            document.getElementById('btn-cancelar-eliminar').addEventListener('click', () => {
+                document.getElementById('confirm-terminar').style.display = 'none';
+            });
+
+            document.getElementById('btn-confirmar-eliminar').addEventListener('click', async () => {
+                if (!rifaActivaId) return;
+                try {
+                    const res = await fetch(`api/rifas.php?id=${rifaActivaId}`, { method: 'DELETE' });
+                    const r   = await res.json();
+                    if (r.status === 'success') {
+                        document.getElementById('boletos-panel').style.display = 'none';
+                        document.getElementById('confirm-terminar').style.display = 'none';
+                        rifaActivaId = null;
+                        await cargarRifas();
+                        showFeedback('rifa-feedback', 'Rifa eliminada correctamente');
+                    } else {
+                        showFeedback('rifa-feedback', 'Error: ' + r.message, true);
+                    }
+                } catch (e) {
+                    showFeedback('rifa-feedback', 'Error al conectar con el servidor.', true);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
